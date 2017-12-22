@@ -1,5 +1,6 @@
 package spring.workshop.webflow.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.faces.config.AbstractFacesFlowConfiguration;
@@ -15,18 +16,21 @@ import org.springframework.webflow.security.SecurityFlowExecutionListener;
 @Configuration
 public class WebFlowConfiguration extends AbstractFacesFlowConfiguration {
 
-    @Bean
-    public FlowDefinitionRegistry flowRegistry() {
-        return getFlowDefinitionRegistryBuilder ()
-                .setBasePath ( "/WEB-INF/flows" )
-                .addFlowLocationPattern ( "/**/*-flow.xml" )
-                .setFlowBuilderServices ( flowBuilderServices () )
-                .build ();
-    }
+    @Autowired
+    FlowDefinitionRegistry flowDefinitionRegistry;
+
+//    @Bean
+//    public FlowDefinitionRegistry flowRegistry() {
+//        return getFlowDefinitionRegistryBuilder ()
+//                .setBasePath ( "/WEB-INF/flows" )
+//                .addFlowLocationPattern ( "/**/*-flow.xml" )
+//                .setFlowBuilderServices ( flowBuilderServices () )
+//                .build ();
+//    }
 
     @Bean
     public FlowExecutor flowExecutor() {
-        return getFlowExecutorBuilder ( flowRegistry () )
+        return getFlowExecutorBuilder ( flowDefinitionRegistry )
                 .addFlowExecutionListener ( new FlowFacesContextLifecycleListener () )
                 .addFlowExecutionListener ( new SecurityFlowExecutionListener () )
                 .build ();

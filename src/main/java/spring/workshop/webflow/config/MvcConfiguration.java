@@ -10,8 +10,8 @@ import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.mvc.UrlFilenameViewController;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
+import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
 import org.springframework.webflow.mvc.servlet.FlowHandlerAdapter;
 import org.springframework.webflow.mvc.servlet.FlowHandlerMapping;
 
@@ -25,12 +25,14 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
 
     @Autowired
     private WebFlowConfiguration webFlowConfig;
+    @Autowired
+    FlowDefinitionRegistry flowDefinitionRegistry;
 
     @Bean
     public FlowHandlerMapping flowHandlerMapping() {
         FlowHandlerMapping handlerMapping = new FlowHandlerMapping();
         handlerMapping.setOrder(-1);
-        handlerMapping.setFlowRegistry(this.webFlowConfig.flowRegistry());
+        handlerMapping.setFlowRegistry(flowDefinitionRegistry);
         return handlerMapping;
     }
 
@@ -44,24 +46,25 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
 
     @Bean
     public ViewResolver urlBasedViewResolver() {
-        UrlBasedViewResolver urlBasedViewResolver = new UrlBasedViewResolver ();
-        urlBasedViewResolver.setViewClass ( JsfView.class );
-        urlBasedViewResolver.setPrefix ( "/WEB-INF/views/" );
-        urlBasedViewResolver.setSuffix ( ".xhtml" );
+        UrlBasedViewResolver urlBasedViewResolver = new UrlBasedViewResolver();
+        urlBasedViewResolver.setViewClass(JsfView.class);
+        urlBasedViewResolver.setPrefix("/WEB-INF/views/");
+        urlBasedViewResolver.setSuffix(".xhtml");
         return urlBasedViewResolver;
     }
 
-    @Bean
-    public DispatcherServlet dispatcherServlet() {
-        return new DispatcherServlet ();
-    }
 
-    @Bean
-    public ServletRegistrationBean dispatcherServletRegistration() {
-        ServletRegistrationBean registration = new ServletRegistrationBean (
-                dispatcherServlet(), "/ui/*" );
-        registration.setName( DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_REGISTRATION_BEAN_NAME );
-        return registration;
-    }
+//    @Bean
+//    public DispatcherServlet dispatcherServlet() {
+//        return new DispatcherServlet();
+//    }
+
+//    @Bean
+//    public ServletRegistrationBean dispatcherServletRegistration() {
+//        ServletRegistrationBean registration = new ServletRegistrationBean(
+//                dispatcherServlet(), "/ui/*");
+//        registration.setName(DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_REGISTRATION_BEAN_NAME);
+//        return registration;
+//    }
 
 }
